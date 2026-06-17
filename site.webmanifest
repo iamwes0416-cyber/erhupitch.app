@@ -1,0 +1,17 @@
+{
+  "name": "WH二胡音準養成工具",
+  "short_name": "WH二胡音準",
+  "description": "WH 二胡音準養成工具",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0b2c5f",
+  "theme_color": "#0b2c5f",
+  "icons": [
+    {
+      "src": "./app-icon.png",
+      "sizes": "1280x1280",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
