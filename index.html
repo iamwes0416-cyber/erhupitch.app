@@ -7,8 +7,8 @@
   <meta name="theme-color" content="#0b2c5f">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="WH二胡音準">
-  <link rel="icon" type="image/png" sizes="1280x1280" href="./app-icon.png">
-  <link rel="apple-touch-icon" href="./app-icon.png">
+  <link rel="icon" type="image/png" href="./whats二胡logo-方.png">
+  <link rel="apple-touch-icon" href="./whats二胡logo-方.png">
   <link rel="manifest" href="./site.webmanifest">
 
   <script src="https://cdn.tailwindcss.com"></script>
@@ -96,8 +96,11 @@
       './src/main.js'
     ];
 
+    const isLocalhost = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+    const scriptCacheMode = isLocalhost ? 'no-store' : 'default';
+
     async function loadPlainScript(src) {
-      const response = await fetch(src, { cache: 'no-store' });
+      const response = await fetch(src, { cache: scriptCacheMode });
       if (!response.ok) {
         throw new Error(`Failed to fetch script: ${src}`);
       }
@@ -109,7 +112,7 @@
     }
 
     async function loadJsxScript(src) {
-      const response = await fetch(src, { cache: 'no-store' });
+      const response = await fetch(src, { cache: scriptCacheMode });
       if (!response.ok) {
         throw new Error(`Failed to fetch JSX script: ${src}`);
       }

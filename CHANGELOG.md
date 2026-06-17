@@ -1,5 +1,15 @@
 # 更新紀錄
 
+## 2026-06-17 - 音訊與載入修正版
+
+狀態：準備同步到 GitHub 與 Vercel。
+
+主要內容：
+- 將指板按鍵事件改為單一 `pointer` 流程，避免手機同時觸發 touch 與 mouse 造成重複發音。
+- 修正手機點音時可能出現的雜音與錄音回放雙重觸發問題。
+- 正式網站恢復腳本快取，避免每次開啟都重新抓取所有腳本。
+- 將頁面 favicon 與 apple touch icon 改成較小的 logo 檔案，降低初始載入負擔。
+
 ## 2026-06-17 - 穩定測試版
 
 狀態：已同步到 GitHub，並更新到 Vercel 正式測試網址。
@@ -23,4 +33,3 @@ https://erhupitch-app.vercel.app/
 - 修改音位資料時，優先檢查 `src/app-data.js`。
 - 修改指板樣式時，優先檢查 `index.html` 的 CSS。
 - 修改聲音時，優先檢查 `src/audio.js`。
-

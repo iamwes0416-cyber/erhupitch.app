@@ -27,22 +27,31 @@ const OctaveDots = ({ dot }) => {
 
 const FingerNote = ({ note, octave, preferFlats, info, activeNote, onStart, onStop, x, y }) => {
   const isActive = activeNote?.note === note && activeNote?.octave === octave;
+  const handlePointerDown = (event) => {
+    if (!event.isPrimary) return;
+    event.preventDefault();
+    onStart(note, octave);
+  };
+  const handlePointerUp = (event) => {
+    if (!event.isPrimary) return;
+    onStop();
+  };
+  const handlePointerLeave = (event) => {
+    if (!event.isPrimary) return;
+    if (event.pointerType === 'mouse' && (event.buttons & 1) === 1) onStop();
+  };
 
   return (
     <button
       type="button"
-      onMouseDown={() => onStart(note, octave)}
-      onMouseUp={onStop}
-      onMouseLeave={onStop}
-      onTouchStart={(event) => {
-        event.preventDefault();
-        onStart(note, octave);
-      }}
-      onTouchEnd={onStop}
+      onPointerDown={handlePointerDown}
+      onPointerUp={handlePointerUp}
+      onPointerCancel={handlePointerUp}
+      onPointerLeave={handlePointerLeave}
       className={`absolute z-20 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-full border-2 shadow-sm transition-all duration-150 ${
         isActive ? 'scale-100 border-blue-600 bg-blue-500 text-white shadow-lg' : 'border-stone-300 bg-white text-slate-700 hover:border-blue-300'
       }`}
-      style={{ left: `${x}px`, top: `${y}px` }}
+      style={{ left: `${x}px`, top: `${y}px`, touchAction: 'none' }}
       aria-label={`${ErhuHelpers.formatNoteName(note, preferFlats)}${octave}，簡譜 ${info?.number || ''}`}
     >
       <OctaveDots dot={info?.dot || 0} />
