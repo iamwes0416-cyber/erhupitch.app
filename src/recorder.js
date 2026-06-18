@@ -9,6 +9,8 @@ function useMelodyRecorder(playTone, stopTone) {
   const recordingStartedAtRef = useRecorderRef(null);
   const noteStartAtRef = useRecorderRef(null);
   const pendingNoteRef = useRecorderRef(null);
+  const activePointerIdRef = useRecorderRef(null);
+  const lastAcceptedStartRef = useRecorderRef(null);
   const playbackTimeoutsRef = useRecorderRef([]);
   const playbackShouldLoopRef = useRecorderRef(false);
 
@@ -29,14 +31,31 @@ function useMelodyRecorder(playTone, stopTone) {
     noteStartAtRef.current = null;
   };
 
-  const handleNoteStart = (note, octave) => {
+  const handleNoteStart = (note, octave, pointerId = null) => {
+    const now = Date.now();
+    const lastAcceptedStart = lastAcceptedStartRef.current;
+
+    if (
+      lastAcceptedStart &&
+      lastAcceptedStart.note === note &&
+      lastAcceptedStart.octave === octave &&
+      now - lastAcceptedStart.at < 140
+    ) {
+      return;
+    }
+
+    if (activePointerIdRef.current !== null && pointerId !== null && activePointerIdRef.current === pointerId) {
+      return;
+    }
+
     playTone(note, octave);
+    activePointerIdRef.current = pointerId;
+    lastAcceptedStartRef.current = { note, octave, at: now };
 
     if (!isRecording) return;
 
     finishPendingRecordedNote();
 
-    const now = Date.now();
     const startedAt = recordingStartedAtRef.current ?? now;
     const noteEntry = {
       note,
@@ -50,7 +69,16 @@ function useMelodyRecorder(playTone, stopTone) {
     setRecordedMelody(currentMelody => [...currentMelody, noteEntry]);
   };
 
-  const handleNoteStop = () => {
+  const handleNoteStop = (pointerId = null) => {
+    if (
+      pointerId !== null &&
+      activePointerIdRef.current !== null &&
+      pointerId !== activePointerIdRef.current
+    ) {
+      return;
+    }
+
+    activePointerIdRef.current = null;
     stopTone();
     finishPendingRecordedNote();
   };
@@ -64,12 +92,15 @@ function useMelodyRecorder(playTone, stopTone) {
     recordingStartedAtRef.current = Date.now();
     noteStartAtRef.current = null;
     pendingNoteRef.current = null;
+    activePointerIdRef.current = null;
+    lastAcceptedStartRef.current = null;
   };
 
   const stopRecording = () => {
     finishPendingRecordedNote();
     setIsRecording(false);
     recordingStartedAtRef.current = null;
+    activePointerIdRef.current = null;
   };
 
   const stopPlayback = () => {
@@ -77,6 +108,7 @@ function useMelodyRecorder(playTone, stopTone) {
     clearPlaybackTimers();
     stopTone();
     setIsPlaying(false);
+    activePointerIdRef.current = null;
   };
 
   const schedulePlaybackCycle = () => {
@@ -126,6 +158,8 @@ function useMelodyRecorder(playTone, stopTone) {
     recordingStartedAtRef.current = null;
     noteStartAtRef.current = null;
     pendingNoteRef.current = null;
+    activePointerIdRef.current = null;
+    lastAcceptedStartRef.current = null;
   };
 
   useRecorderEffect(() => () => {
