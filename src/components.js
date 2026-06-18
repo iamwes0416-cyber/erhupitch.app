@@ -194,46 +194,10 @@ const RecorderActions = ({ isRecording, isPlaying, recordedCount, onRecordToggle
   </div>
 );
 
-const RecorderDebugList = ({ recordedMelody = [] }) => {
-  if (!recordedMelody.length) return null;
-
-  return (
-    <div className="mt-3 rounded-lg border border-slate-200 bg-slate-50 p-2">
-      <div className="mb-2 flex items-center justify-between">
-        <h3 className="text-xs font-bold uppercase tracking-wide text-slate-500">Debug Notes</h3>
-        <span className="text-[11px] text-slate-400">start / duration</span>
-      </div>
-      <div className="space-y-1">
-        {recordedMelody.map((item, index) => {
-          const previous = recordedMelody[index - 1];
-          const possibleDuplicate = previous
-            && previous.note === item.note
-            && previous.octave === item.octave
-            && Math.abs(item.startOffset - previous.startOffset) < 140;
-
-          return (
-            <div
-              key={`${item.note}-${item.octave}-${item.startOffset}-${index}`}
-              className={`flex items-center justify-between rounded-md px-2 py-1 text-xs ${possibleDuplicate ? 'bg-amber-100 text-amber-800' : 'bg-white text-slate-600'}`}
-            >
-              <span className="font-semibold">
-                {index + 1}. {ErhuHelpers.formatNoteName(item.note, false)}{item.octave}
-                {possibleDuplicate ? ' dup?' : ''}
-              </span>
-              <span>{item.startOffset}ms / {item.duration}ms</span>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-};
-
 const RecorderPanel = ({
   isRecording,
   isPlaying,
   recordedCount,
-  recordedMelody,
   playbackMode,
   onPlaybackModeChange,
   onRecordToggle,
@@ -271,7 +235,6 @@ const RecorderPanel = ({
       onPlayToggle={onPlayToggle}
       onClear={onClear}
     />
-    <RecorderDebugList recordedMelody={recordedMelody} />
   </div>
 );
 

@@ -18,7 +18,6 @@ function MusicTool() {
           isRecording={recorder.isRecording}
           isPlaying={recorder.isPlaying}
           recordedCount={recorder.recordedMelody.length}
-          recordedMelody={recorder.recordedMelody}
           playbackMode={recorder.playbackMode}
           onPlaybackModeChange={recorder.setPlaybackMode}
           onRecordToggle={recorder.isRecording ? recorder.stopRecording : recorder.startRecording}
