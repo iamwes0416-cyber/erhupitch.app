@@ -10,13 +10,11 @@
   <link rel="icon" type="image/png" href="./whats二胡logo-方.png">
   <link rel="apple-touch-icon" href="./whats二胡logo-方.png">
   <link rel="manifest" href="./site.webmanifest">
-  <link rel="preconnect" href="https://cdn.tailwindcss.com">
-  <link rel="preconnect" href="https://unpkg.com" crossorigin>
 
-  <script defer src="https://cdn.tailwindcss.com"></script>
-  <script defer crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script defer crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <script defer src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
   <style>
     body { overscroll-behavior-y: none; }
@@ -87,14 +85,36 @@
   <div id="root"></div>
 
   <script>
+    const plainScripts = [
+      './src/app-data.js',
+      './src/audio.js',
+      './src/recorder.js'
+    ];
+
+    const jsxScripts = [
+      './src/components.js',
+      './src/main.js'
+    ];
+
     const isLocalhost = ['localhost', '127.0.0.1'].includes(window.location.hostname);
     const scriptCacheMode = isLocalhost ? 'no-store' : 'default';
 
-    async function bootstrapApp() {
-      const src = './src/app.bundle.js';
+    async function loadPlainScript(src) {
       const response = await fetch(src, { cache: scriptCacheMode });
       if (!response.ok) {
-        throw new Error(`Failed to fetch app bundle: ${src}`);
+        throw new Error(`Failed to fetch script: ${src}`);
+      }
+
+      const source = await response.text();
+      const script = document.createElement('script');
+      script.text = `(() => {\n${source}\n})();\n//# sourceURL=${src}`;
+      document.body.appendChild(script);
+    }
+
+    async function loadJsxScript(src) {
+      const response = await fetch(src, { cache: scriptCacheMode });
+      if (!response.ok) {
+        throw new Error(`Failed to fetch JSX script: ${src}`);
       }
 
       const source = await response.text();
@@ -106,10 +126,18 @@
       document.body.appendChild(script);
     }
 
-    window.addEventListener('DOMContentLoaded', () => {
-      bootstrapApp().catch((error) => {
-        console.error('App bootstrap failed:', error);
-      });
+    async function bootstrapApp() {
+      for (const src of plainScripts) {
+        await loadPlainScript(src);
+      }
+
+      for (const src of jsxScripts) {
+        await loadJsxScript(src);
+      }
+    }
+
+    bootstrapApp().catch((error) => {
+      console.error('App bootstrap failed:', error);
     });
   </script>
 </body>
