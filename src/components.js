@@ -64,15 +64,15 @@ const FingerNote = ({ note, octave, preferFlats, info, activeNote, onStart, onSt
 const BusinessCard = () => (
   <div className="mobile-business-card mb-4 rounded-2xl border border-slate-100 bg-white p-4 shadow-lg md:p-5">
     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3 sm:gap-4">
         <img
           src="./whats二胡logo-方.png"
           alt="WH Logo"
-          className="h-20 w-20 rounded-2xl border border-slate-100 object-cover shadow-sm"
+          className="h-16 w-16 rounded-2xl border border-slate-100 object-cover shadow-sm sm:h-20 sm:w-20"
         />
         <div className="min-w-0">
-          <h3 className="text-2xl font-bold tracking-tight text-slate-800">WH 二胡｜您的二胡專家</h3>
-          <p className="mt-1 text-lg font-semibold text-indigo-600">樂器販售 • 專業教學</p>
+          <h3 className="whitespace-nowrap text-[1.1rem] font-bold leading-tight tracking-tight text-slate-800 sm:text-2xl">WH 二胡｜您的二胡專家</h3>
+          <p className="mt-1 text-base font-semibold text-indigo-600 sm:text-lg">樂器販售 • 專業教學</p>
         </div>
       </div>
 
