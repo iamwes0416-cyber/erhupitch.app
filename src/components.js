@@ -25,9 +25,12 @@ const OctaveDots = ({ dot }) => {
   );
 };
 
-const FingerNote = ({ note, octave, preferFlats, info, activeNote, onStart, onStop, x, y }) => {
+const FingerNote = ({ note, octave, preferFlats, info, activeNote, onStart, onStop, x, y, noteScale = 1 }) => {
   const isActive = activeNote?.note === note && activeNote?.octave === octave;
   const displayNoteName = info?.displayNoteName || ErhuHelpers.formatNoteName(note, preferFlats);
+  const noteSize = 54 * noteScale;
+  const numberSize = (isActive ? 22 : 18) * noteScale;
+  const noteNameSize = 11 * noteScale;
   const handlePointerDown = (event) => {
     if (!event.isPrimary) return;
     event.preventDefault();
@@ -49,15 +52,32 @@ const FingerNote = ({ note, octave, preferFlats, info, activeNote, onStart, onSt
       onPointerUp={handlePointerUp}
       onPointerCancel={handlePointerUp}
       onPointerLeave={handlePointerLeave}
-      className={`absolute z-20 flex h-[54px] w-[54px] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-full border-2 shadow-sm transition-all duration-150 ${
+      className={`absolute z-20 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-full border-2 shadow-sm transition-all duration-150 ${
         isActive ? 'scale-100 border-blue-600 bg-blue-500 text-white shadow-lg' : 'border-stone-300 bg-white text-slate-700 hover:border-blue-300'
       }`}
-      style={{ left: `${x}px`, top: `${y}px`, touchAction: 'none' }}
+      style={{
+        left: `${x}px`,
+        top: `${y}px`,
+        width: `${noteSize}px`,
+        height: `${noteSize}px`,
+        touchAction: 'none',
+        '--note-scale': noteScale
+      }}
       aria-label={`${displayNoteName}${octave}，簡譜 ${info?.number || ''}`}
     >
       <OctaveDots dot={info?.dot || 0} />
-      <span className={`jianpu-number leading-none ${isActive ? 'text-[22px] font-bold' : 'text-[18px] font-bold text-slate-800'}`}>{info?.number || ''}</span>
-      <span className={`note-name ${isActive ? 'text-[11px] text-blue-100' : 'text-[11px] text-slate-500'}`}>{displayNoteName}{octave}</span>
+      <span
+        className={`jianpu-number font-bold leading-none ${isActive ? '' : 'text-slate-800'}`}
+        style={{ fontSize: `${numberSize}px` }}
+      >
+        {info?.number || ''}
+      </span>
+      <span
+        className={`note-name ${isActive ? 'text-blue-100' : 'text-slate-500'}`}
+        style={{ fontSize: `${noteNameSize}px` }}
+      >
+        {displayNoteName}{octave}
+      </span>
     </button>
   );
 };
@@ -239,12 +259,14 @@ const RecorderPanel = ({
   </div>
 );
 
-const ErhuBoard = ({ rootNote, selectedKey, activeNote, onStartTone, onStopTone }) => {
-  const { width, innerX, outerX, nutY, rowStep, nutLineLeft, nutLineWidth } = ErhuAppData.board;
+const ErhuBoard = ({ rootNote, selectedKey, activeNote, onStartTone, onStopTone, boardScale = 100 }) => {
+  const { width, innerX, outerX, nutY, nutLineLeft, nutLineWidth } = ErhuAppData.board;
+  const scale = boardScale / 100;
+  const rowStep = ErhuAppData.board.rowStep * scale;
   const positionForSemitone = semitone => semitone * (rowStep / 2);
   const lastNoteLinePosition = Math.ceil(Math.max(selectedKey.innerMax, selectedKey.outerMax) / 2);
   const horizontalLinePositions = Array.from({ length: lastNoteLinePosition }, (_, index) => index + 1);
-  const boardHeight = nutY + lastNoteLinePosition * rowStep + 52;
+  const boardHeight = nutY + lastNoteLinePosition * rowStep + Math.max(52, 56 * scale);
 
   const renderNote = (key, stringIndex, semitone, x) => {
     const string = ErhuAppData.strings[stringIndex];
@@ -266,6 +288,7 @@ const ErhuBoard = ({ rootNote, selectedKey, activeNote, onStartTone, onStopTone 
         onStop={onStopTone}
         x={x}
         y={nutY + positionForSemitone(semitone + (info.yOffsetSteps || 0))}
+        noteScale={scale}
       />
     );
   };
@@ -298,13 +321,32 @@ const ErhuBoard = ({ rootNote, selectedKey, activeNote, onStartTone, onStopTone 
   );
 };
 
-const BoardPanel = ({ selectedKey, activeNote, onStartTone, onStopTone }) => (
+const BoardSizeControl = ({ boardScale, onBoardScaleChange }) => (
+  <label className="flex w-full items-center gap-2 text-xs font-bold text-slate-500 sm:w-auto">
+    <span className="whitespace-nowrap">指板大小</span>
+    <input
+      type="range"
+      min="90"
+      max="120"
+      step="5"
+      value={boardScale}
+      onInput={(event) => onBoardScaleChange(Number(event.target.value))}
+      onChange={(event) => onBoardScaleChange(Number(event.target.value))}
+      className="h-2 min-w-0 flex-1 accent-indigo-500 sm:w-28"
+      aria-label="調整指板大小"
+    />
+    <span className="w-10 text-right text-slate-600">{boardScale}%</span>
+  </label>
+);
+
+const BoardPanel = ({ selectedKey, activeNote, onStartTone, onStopTone, boardScale, onBoardScaleChange }) => (
   <div className="mobile-board-card min-h-[400px] rounded-2xl border border-slate-100 bg-white p-4 shadow-lg md:p-6">
     <div className="mobile-board-heading mb-3 flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-2">
       <h2 className="text-base font-bold text-slate-700">
         二胡指板 (Fingerboard)
         <span className="ml-2 text-indigo-600">- {selectedKey.chartLabel || selectedKey.label} 調</span>
       </h2>
+      <BoardSizeControl boardScale={boardScale} onBoardScaleChange={onBoardScaleChange} />
     </div>
     <div className="flex w-full justify-center">
       <ErhuBoard
@@ -313,6 +355,7 @@ const BoardPanel = ({ selectedKey, activeNote, onStartTone, onStopTone }) => (
         activeNote={activeNote}
         onStartTone={onStartTone}
         onStopTone={onStopTone}
+        boardScale={boardScale}
       />
     </div>
   </div>

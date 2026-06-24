@@ -1,13 +1,21 @@
-const { useState } = React;
+const { useEffect, useState } = React;
 const { useErhuAudio } = window.ErhuAudio;
 const { useMelodyRecorder } = window.ErhuRecorder;
 const { BusinessCard, ToolHeader, RecorderPanel, BoardPanel } = window.ErhuComponents;
 
 function MusicTool() {
   const [rootNote, setRootNote] = useState('D');
+  const [boardScale, setBoardScale] = useState(() => {
+    const storedScale = Number(window.localStorage.getItem('erhu-board-scale'));
+    return storedScale >= 90 && storedScale <= 120 ? storedScale : 100;
+  });
   const selectedKey = window.ErhuAppData.keys.find(key => key.note === rootNote) || window.ErhuAppData.keys[0];
   const { activeNote, playTone, stopTone } = useErhuAudio(window.ErhuAppData.toneProfile);
   const recorder = useMelodyRecorder(playTone, stopTone);
+
+  useEffect(() => {
+    window.localStorage.setItem('erhu-board-scale', String(boardScale));
+  }, [boardScale]);
 
   return (
     <div className="min-h-screen bg-slate-50 pb-10 font-sans text-slate-800">
@@ -29,6 +37,8 @@ function MusicTool() {
           activeNote={activeNote}
           onStartTone={recorder.handleNoteStart}
           onStopTone={recorder.handleNoteStop}
+          boardScale={boardScale}
+          onBoardScaleChange={setBoardScale}
         />
         <div className="mobile-footer mt-8 text-center text-sm text-slate-400">
           已收錄 D、G、C、B♭、F、A 六調完整指法。點擊音位發聲，長按持續，放手停止。

@@ -37,21 +37,21 @@
       transform: translateX(-50%);
       z-index: 2;
     }
-    .jianpu-dot-row.upper.single { top: 8px; }
-    .jianpu-dot-row.upper.double { top: 1px; }
+    .jianpu-dot-row.upper.single { top: calc(8px * var(--note-scale, 1)); }
+    .jianpu-dot-row.upper.double { top: calc(1px * var(--note-scale, 1)); }
     .jianpu-dot-row.lower {
-      top: 31px;
+      top: calc(31px * var(--note-scale, 1));
     }
     .jianpu-dot-row.lower span {
-      height: 3px;
-      width: 3px;
+      height: calc(3px * var(--note-scale, 1));
+      width: calc(3px * var(--note-scale, 1));
     }
     .jianpu-dot-row span {
       background: currentColor;
       border-radius: 9999px;
       display: block;
-      height: 4px;
-      width: 4px;
+      height: calc(4px * var(--note-scale, 1));
+      width: calc(4px * var(--note-scale, 1));
     }
     .jianpu-number {
       position: relative;
