@@ -19,7 +19,7 @@ window.ErhuAppData = {
     innerX: 110,
     outerX: 240,
     nutY: 110,
-    rowStep: 100,
+    rowStep: 112,
     nutLineLeft: 35,
     nutLineWidth: 280
   },

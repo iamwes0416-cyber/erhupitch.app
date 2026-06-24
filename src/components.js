@@ -49,15 +49,15 @@ const FingerNote = ({ note, octave, preferFlats, info, activeNote, onStart, onSt
       onPointerUp={handlePointerUp}
       onPointerCancel={handlePointerUp}
       onPointerLeave={handlePointerLeave}
-      className={`absolute z-20 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-full border-2 shadow-sm transition-all duration-150 ${
+      className={`absolute z-20 flex h-[54px] w-[54px] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-full border-2 shadow-sm transition-all duration-150 ${
         isActive ? 'scale-100 border-blue-600 bg-blue-500 text-white shadow-lg' : 'border-stone-300 bg-white text-slate-700 hover:border-blue-300'
       }`}
       style={{ left: `${x}px`, top: `${y}px`, touchAction: 'none' }}
       aria-label={`${displayNoteName}${octave}，簡譜 ${info?.number || ''}`}
     >
       <OctaveDots dot={info?.dot || 0} />
-      <span className={`jianpu-number leading-none ${isActive ? 'text-xl font-bold' : 'text-[15px] font-bold text-slate-800'}`}>{info?.number || ''}</span>
-      <span className={`note-name ${isActive ? 'text-[9px] text-blue-100' : 'text-[10px] text-slate-500'}`}>{displayNoteName}{octave}</span>
+      <span className={`jianpu-number leading-none ${isActive ? 'text-[22px] font-bold' : 'text-[18px] font-bold text-slate-800'}`}>{info?.number || ''}</span>
+      <span className={`note-name ${isActive ? 'text-[11px] text-blue-100' : 'text-[11px] text-slate-500'}`}>{displayNoteName}{octave}</span>
     </button>
   );
 };
