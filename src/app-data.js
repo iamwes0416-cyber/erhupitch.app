@@ -49,12 +49,28 @@ window.ErhuAppData = {
       }
     },
     {
+      label: 'F',
+      note: 'F',
+      desc: '6̣ - 3 弦',
+      preferFlats: true,
+      innerMax: 17,
+      outerMax: 17,
+      charts: {
+        0: { startNumber: 6, startDot: -1, semitones: [0, 2, 3, 5, 7, 8, 10, 12, 14, 15, 17] },
+        1: { startNumber: 3, startDot: 0, semitones: [0, 1, 3, 5, 7, 8, 10, 12, 13, 15, 17] }
+      }
+    },
+    {
       label: 'C',
       note: 'C',
       desc: '2 - 6 弦',
       preferFlats: false,
       innerMax: 17,
       outerMax: 17,
+      noteNameOverrides: {
+        '0:16': 'F',
+        '1:16': 'C'
+      },
       charts: {
         0: { startNumber: 2, startDot: 0, semitones: [0, 2, 3, 5, 7, 9, 10, 12, 14, 16, 17] },
         1: { startNumber: 6, startDot: 0, semitones: [0, 2, 3, 5, 7, 8, 10, 12, 14, 16, 17] }
@@ -71,18 +87,6 @@ window.ErhuAppData = {
       charts: {
         0: { startNumber: 3, startDot: -1, semitones: [0, 2, 3, 5, 7, 8, 10, 12, 13, 15, 17] },
         1: { startNumber: 7, startDot: -1, semitones: [0, 1, 3, 5, 6, 8, 10, 12, 13, 15, 17] }
-      }
-    },
-    {
-      label: 'F',
-      note: 'F',
-      desc: '6̣ - 3 弦',
-      preferFlats: true,
-      innerMax: 17,
-      outerMax: 17,
-      charts: {
-        0: { startNumber: 6, startDot: -1, semitones: [0, 2, 3, 5, 7, 8, 10, 12, 14, 15, 17] },
-        1: { startNumber: 3, startDot: 0, semitones: [0, 1, 3, 5, 7, 8, 10, 12, 13, 15, 17] }
       }
     },
     {
@@ -154,9 +158,12 @@ window.ErhuHelpers = {
     const chartEntry = this.getChartEntry(selectedKey, stringIndex, semitone);
     if (!chartEntry) return null;
 
+    const overrideKey = `${stringIndex}:${semitone}`;
+
     return {
       number: chartEntry.number,
-      dot: chartEntry.dot
+      dot: chartEntry.dot,
+      displayNoteName: selectedKey.noteNameOverrides?.[overrideKey] || null
     };
   },
 
