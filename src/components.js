@@ -265,7 +265,7 @@ const ErhuBoard = ({ rootNote, selectedKey, activeNote, onStartTone, onStopTone 
         onStart={onStartTone}
         onStop={onStopTone}
         x={x}
-        y={nutY + positionForSemitone(semitone)}
+        y={nutY + positionForSemitone(semitone + (info.yOffsetSteps || 0))}
       />
     );
   };

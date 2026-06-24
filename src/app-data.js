@@ -71,6 +71,10 @@ window.ErhuAppData = {
         '0:16': 'F',
         '1:16': 'C'
       },
+      notePositionOffsets: {
+        '0:16': -1,
+        '1:16': -1
+      },
       charts: {
         0: { startNumber: 2, startDot: 0, semitones: [0, 2, 3, 5, 7, 9, 10, 12, 14, 16, 17] },
         1: { startNumber: 6, startDot: 0, semitones: [0, 2, 3, 5, 7, 8, 10, 12, 14, 16, 17] }
@@ -163,7 +167,8 @@ window.ErhuHelpers = {
     return {
       number: chartEntry.number,
       dot: chartEntry.dot,
-      displayNoteName: selectedKey.noteNameOverrides?.[overrideKey] || null
+      displayNoteName: selectedKey.noteNameOverrides?.[overrideKey] || null,
+      yOffsetSteps: selectedKey.notePositionOffsets?.[overrideKey] || 0
     };
   },
 
