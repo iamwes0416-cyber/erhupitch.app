@@ -88,6 +88,9 @@ window.ErhuAppData = {
       preferFlats: true,
       innerMax: 17,
       outerMax: 17,
+      notePositionOffsets: {
+        '0:2': -1
+      },
       charts: {
         0: { startNumber: 3, startDot: -1, semitones: [0, 2, 3, 5, 7, 8, 10, 12, 13, 15, 17] },
         1: { startNumber: 7, startDot: -1, semitones: [0, 1, 3, 5, 6, 8, 10, 12, 13, 15, 17] }
