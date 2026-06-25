@@ -321,24 +321,6 @@ const ErhuBoard = ({ rootNote, selectedKey, activeNote, onStartTone, onStopTone 
   );
 };
 
-const BoardSizeControl = ({ boardScale, onBoardScaleChange }) => (
-  <label className="flex w-full items-center gap-2 text-xs font-bold text-slate-500 sm:w-auto">
-    <span className="whitespace-nowrap">指板大小</span>
-    <input
-      type="range"
-      min="90"
-      max="120"
-      step="5"
-      value={boardScale}
-      onInput={(event) => onBoardScaleChange(Number(event.target.value))}
-      onChange={(event) => onBoardScaleChange(Number(event.target.value))}
-      className="h-2 min-w-0 flex-1 accent-indigo-500 sm:w-28"
-      aria-label="調整指板大小"
-    />
-    <span className="w-10 text-right text-slate-600">{boardScale}%</span>
-  </label>
-);
-
 const BoardPanel = ({ selectedKey, activeNote, onStartTone, onStopTone }) => (
   <div className="mobile-board-card min-h-[400px] rounded-2xl border border-slate-100 bg-white p-4 shadow-lg md:p-6">
     <div className="mobile-board-heading mb-3 flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-2">
