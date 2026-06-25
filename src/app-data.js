@@ -88,6 +88,9 @@ window.ErhuAppData = {
       preferFlats: true,
       innerMax: 17,
       outerMax: 17,
+      noteNameOverrides: {
+        '0:2': 'E♭'
+      },
       notePositionOffsets: {
         '0:2': -1
       },
