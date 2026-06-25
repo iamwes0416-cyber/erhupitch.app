@@ -259,9 +259,9 @@ const RecorderPanel = ({
   </div>
 );
 
-const ErhuBoard = ({ rootNote, selectedKey, activeNote, onStartTone, onStopTone, boardScale = 100 }) => {
+const ErhuBoard = ({ rootNote, selectedKey, activeNote, onStartTone, onStopTone }) => {
   const { width, innerX, outerX, nutY, nutLineLeft, nutLineWidth } = ErhuAppData.board;
-  const scale = boardScale / 100;
+  const scale = 1.5;
   const rowStep = ErhuAppData.board.rowStep * scale;
   const positionForSemitone = semitone => semitone * (rowStep / 2);
   const lastNoteLinePosition = Math.ceil(Math.max(selectedKey.innerMax, selectedKey.outerMax) / 2);
@@ -339,14 +339,13 @@ const BoardSizeControl = ({ boardScale, onBoardScaleChange }) => (
   </label>
 );
 
-const BoardPanel = ({ selectedKey, activeNote, onStartTone, onStopTone, boardScale, onBoardScaleChange }) => (
+const BoardPanel = ({ selectedKey, activeNote, onStartTone, onStopTone }) => (
   <div className="mobile-board-card min-h-[400px] rounded-2xl border border-slate-100 bg-white p-4 shadow-lg md:p-6">
     <div className="mobile-board-heading mb-3 flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-2">
       <h2 className="text-base font-bold text-slate-700">
         二胡指板 (Fingerboard)
         <span className="ml-2 text-indigo-600">- {selectedKey.chartLabel || selectedKey.label} 調</span>
       </h2>
-      <BoardSizeControl boardScale={boardScale} onBoardScaleChange={onBoardScaleChange} />
     </div>
     <div className="flex w-full justify-center">
       <ErhuBoard
@@ -355,7 +354,6 @@ const BoardPanel = ({ selectedKey, activeNote, onStartTone, onStopTone, boardSca
         activeNote={activeNote}
         onStartTone={onStartTone}
         onStopTone={onStopTone}
-        boardScale={boardScale}
       />
     </div>
   </div>
