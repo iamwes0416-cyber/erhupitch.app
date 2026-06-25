@@ -259,9 +259,9 @@ const RecorderPanel = ({
   </div>
 );
 
-const ErhuBoard = ({ rootNote, selectedKey, activeNote, onStartTone, onStopTone }) => {
+const ErhuBoard = ({ rootNote, selectedKey, activeNote, onStartTone, onStopTone, boardDisplayScale = 100 }) => {
   const { width, innerX, outerX, nutY, nutLineLeft, nutLineWidth } = ErhuAppData.board;
-  const scale = 1.5;
+  const scale = 1.5 * (boardDisplayScale / 100);
   const rowStep = ErhuAppData.board.rowStep * scale;
   const positionForSemitone = semitone => semitone * (rowStep / 2);
   const lastNoteLinePosition = Math.ceil(Math.max(selectedKey.innerMax, selectedKey.outerMax) / 2);
@@ -321,13 +321,32 @@ const ErhuBoard = ({ rootNote, selectedKey, activeNote, onStartTone, onStopTone 
   );
 };
 
-const BoardPanel = ({ selectedKey, activeNote, onStartTone, onStopTone }) => (
+const BoardScaleControl = ({ boardDisplayScale, onBoardDisplayScaleChange }) => (
+  <label className="flex w-full items-center gap-2 text-xs font-bold text-slate-500 sm:w-auto">
+    <span className="whitespace-nowrap">指板大小</span>
+    <input
+      type="range"
+      min="80"
+      max="120"
+      step="5"
+      value={boardDisplayScale}
+      onInput={(event) => onBoardDisplayScaleChange(Number(event.target.value))}
+      onChange={(event) => onBoardDisplayScaleChange(Number(event.target.value))}
+      className="h-2 min-w-0 flex-1 accent-indigo-500 sm:w-28"
+      aria-label="調整指板大小"
+    />
+    <span className="w-10 text-right text-slate-600">{boardDisplayScale}%</span>
+  </label>
+);
+
+const BoardPanel = ({ selectedKey, activeNote, onStartTone, onStopTone, boardDisplayScale, onBoardDisplayScaleChange }) => (
   <div className="mobile-board-card min-h-[400px] rounded-2xl border border-slate-100 bg-white p-4 shadow-lg md:p-6">
     <div className="mobile-board-heading mb-3 flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-2">
       <h2 className="text-base font-bold text-slate-700">
         二胡指板 (Fingerboard)
         <span className="ml-2 text-indigo-600">- {selectedKey.chartLabel || selectedKey.label} 調</span>
       </h2>
+      <BoardScaleControl boardDisplayScale={boardDisplayScale} onBoardDisplayScaleChange={onBoardDisplayScaleChange} />
     </div>
     <div className="flex w-full justify-center">
       <ErhuBoard
@@ -336,6 +355,7 @@ const BoardPanel = ({ selectedKey, activeNote, onStartTone, onStopTone }) => (
         activeNote={activeNote}
         onStartTone={onStartTone}
         onStopTone={onStopTone}
+        boardDisplayScale={boardDisplayScale}
       />
     </div>
   </div>
