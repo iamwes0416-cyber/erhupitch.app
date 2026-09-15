@@ -5,23 +5,29 @@ const { BusinessCard, ToolHeader, RecorderPanel, BoardPanel } = window.ErhuCompo
 
 function MusicTool() {
   const [rootNote, setRootNote] = useState('D');
-  const [boardDisplayScale, setBoardDisplayScale] = useState(() => {
-    const storedScale = Number(window.localStorage.getItem('erhu-board-display-scale'));
-    return storedScale >= 80 && storedScale <= 120 ? storedScale : 100;
+  const [soundEnabled, setSoundEnabled] = useState(() => {
+    const stored = window.localStorage.getItem('erhu-sound-enabled');
+    return stored === null ? true : stored === 'true';
   });
   const selectedKey = window.ErhuAppData.keys.find(key => key.note === rootNote) || window.ErhuAppData.keys[0];
-  const { activeNote, playTone, stopTone } = useErhuAudio(window.ErhuAppData.toneProfile);
+  const { activeNote, playTone, stopTone } = useErhuAudio(window.ErhuAppData.toneProfile, soundEnabled);
   const recorder = useMelodyRecorder(playTone, stopTone);
 
   useEffect(() => {
-    window.localStorage.setItem('erhu-board-display-scale', String(boardDisplayScale));
-  }, [boardDisplayScale]);
+    window.localStorage.setItem('erhu-sound-enabled', String(soundEnabled));
+    if (!soundEnabled) stopTone();
+  }, [soundEnabled]);
 
   return (
     <div className="min-h-screen bg-slate-50 pb-10 font-sans text-slate-800">
       <div className="mobile-app-shell mx-auto max-w-4xl p-3 md:p-4">
         <BusinessCard />
-        <ToolHeader rootNote={rootNote} onRootNoteChange={setRootNote} />
+        <ToolHeader
+          rootNote={rootNote}
+          onRootNoteChange={setRootNote}
+          soundEnabled={soundEnabled}
+          onSoundToggle={() => setSoundEnabled(enabled => !enabled)}
+        />
         <RecorderPanel
           isRecording={recorder.isRecording}
           isPlaying={recorder.isPlaying}
@@ -37,8 +43,6 @@ function MusicTool() {
           activeNote={activeNote}
           onStartTone={recorder.handleNoteStart}
           onStopTone={recorder.handleNoteStop}
-          boardDisplayScale={boardDisplayScale}
-          onBoardDisplayScaleChange={setBoardDisplayScale}
         />
         <div className="mobile-footer mt-8 text-center text-sm text-slate-400">
           已收錄 D、G、C、B♭、F、A 六調完整指法。點擊音位發聲，長按持續，放手停止。

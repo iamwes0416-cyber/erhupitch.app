@@ -1,7 +1,7 @@
 const { useEffect, useRef, useState } = React;
 const { getFrequency, createNoiseBuffer } = window.ErhuHelpers;
 
-function useErhuAudio(profile) {
+function useErhuAudio(profile, soundEnabled = true) {
   const [activeNote, setActiveNote] = useState(null);
   const audioCtxRef = useRef(null);
   const activeSoundRef = useRef(null);
@@ -39,6 +39,12 @@ function useErhuAudio(profile) {
   };
 
   const playTone = (note, octave) => {
+    if (!soundEnabled) {
+      stopTone();
+      setActiveNote({ note, octave });
+      return;
+    }
+
     const ctx = initAudio();
     const frequency = getFrequency(note, octave);
 
