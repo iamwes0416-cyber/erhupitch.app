@@ -296,8 +296,8 @@ const ErhuBoard = ({ rootNote, selectedKey, activeNote, onStartTone, onStopTone 
     return (
       <FingerNote
         key={key}
-        note={note}
-        octave={octave}
+        note={info.soundNote || note}
+        octave={info.soundOctave ?? octave}
         preferFlats={selectedKey.preferFlats}
         info={info}
         activeNote={activeNote}

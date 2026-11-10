@@ -91,6 +91,9 @@ window.ErhuAppData = {
       noteNameOverrides: {
         '0:2': 'E♭'
       },
+      soundNoteOverrides: {
+        '0:2': { note: 'D#', octave: 4 }
+      },
       notePositionOffsets: {
         '0:2': -1
       },
@@ -174,6 +177,8 @@ window.ErhuHelpers = {
       number: chartEntry.number,
       dot: chartEntry.dot,
       displayNoteName: selectedKey.noteNameOverrides?.[overrideKey] || null,
+      soundNote: selectedKey.soundNoteOverrides?.[overrideKey]?.note || null,
+      soundOctave: selectedKey.soundNoteOverrides?.[overrideKey]?.octave ?? null,
       yOffsetSteps: selectedKey.notePositionOffsets?.[overrideKey] || 0
     };
   },
